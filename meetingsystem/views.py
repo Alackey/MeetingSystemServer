@@ -29,10 +29,16 @@ class UserView(View):
     def get(self, request):
         employeeID = request.GET.get('employeeID')
         serializer = Serializer()
-        user = serializer.serialize(
-            [models.User.objects.get(employeeID=employeeID)]
-        )
-        return JsonResponse(user[1:-1], safe=False)
+
+        try:
+            user = serializer.serialize(
+                [models.User.objects.get(employeeID=employeeID)]
+            )
+        except ObjectDoesNotExist:
+            return JsonResponse({
+                'error': True, 'errorMessage': 'User Not Found'
+            })
+        return JsonResponse({'error': False, 'user': user[1:-1]}, safe=False)
 
 
 class MeetingView(View):
