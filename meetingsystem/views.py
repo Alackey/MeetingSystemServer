@@ -41,6 +41,15 @@ class UserView(View):
         return JsonResponse({'error': False, 'user': user[1:-1]}, safe=False)
 
 
+class UserAllView(View):
+    def get(self, request):
+        serializer = Serializer()
+        users = serializer.serialize(
+            models.User.objects.all()
+        )
+        return JsonResponse({'error': False, 'data': users})
+
+
 class MeetingView(View):
     def post(self, request):
         body = json.loads(request.body.decode('utf-8'))
