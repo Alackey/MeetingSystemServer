@@ -68,7 +68,7 @@ class MeetingView(View):
         return JsonResponse({'error': False, 'id': meeting.id})
 
 
-# Override Django serializer
+# Override Django serializer: Serializer only returns object fields
 class Serializer(Builtin_Serializer):
     def get_dump_object(self, obj):
         return self._current
