@@ -53,6 +53,7 @@ class UserAllView(View):
 class MeetingView(View):
     def post(self, request):
         body = json.loads(request.body.decode('utf-8'))
+        # Create meeting
         meeting = models.Meeting(
             owner=body['owner'],
             title=body['title'],
@@ -67,6 +68,17 @@ class MeetingView(View):
             isActive=body['isActive']
         )
         meeting.save()
+        # Add meeting info to schedule
+        # for employee in meeting.employees:
+        #     temp_schedule = models.Schedule(
+        #         type=
+        #         id=
+        #         title=
+        #         startTime=
+        #         endTime=
+        #         date=
+        #     )
+        #     temp_schedule.save()
         return JsonResponse({'error': False, 'id': meeting.id})
 
 
