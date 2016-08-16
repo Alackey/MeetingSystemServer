@@ -53,7 +53,19 @@ class UserAllView(View):
 class MeetingView(View):
     def post(self, request):
         body = json.loads(request.body.decode('utf-8'))
-        return JsonResponse({'error': False})
+        meeting = models.Meeting(
+            owner=body['owner'],
+            room=body['room'],
+            startTime=body['startTime'],
+            endTime=body['endTime'],
+            date=body['date'],
+            employees=body['employees'],
+            accepted=body['accepted'],
+            declined=body['declined'],
+            isActive=body['isActive']
+        )
+        meeting.save()
+        return JsonResponse({'error': False, 'id': meeting.id})
 
 
 # Override Django serializer

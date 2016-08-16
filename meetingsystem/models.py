@@ -11,8 +11,8 @@ class User(models.Model):
 class Meeting(models.Model):
     owner = models.CharField(max_length=20)
     room = models.CharField(max_length=20)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+    startTime = models.TimeField()
+    endTime = models.TimeField()
     date = models.DateField()
     employees = ArrayField(models.CharField(max_length=20))
     accepted = ArrayField(models.CharField(max_length=20))
