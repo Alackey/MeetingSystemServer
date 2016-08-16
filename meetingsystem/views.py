@@ -72,19 +72,29 @@ class MeetingView(View):
         schedule, created = models.Schedule.objects.get_or_create(
             employeeID=meeting.owner
         )
-        # data = {'hello': 'world', 'timing': 'bnow'}
-        # print(data['hello'])
-        # print(schedule.blocks.append(data))
-        # print(schedule.blocks)
         schedule.blocks.append({
-            'type': 'meeting',
             'id': meeting.id,
+            'type': 'meeting',
             'title': meeting.title,
             'startTime': meeting.startTime,
             'endTime': meeting.endTime,
             'date': meeting.date
         })
         schedule.save()
+        # Add invites to employees InviteBox
+        for employee in meeting.employees:
+            temp_InviteBox, created = models.InviteBox.objects.get_or_create(
+                employeeID=employee
+            )
+            temp_InviteBox.invites.append({
+                'id': meeting.id,
+                'owner': meeting.owner,
+                'title': meeting.title,
+                'startTime': meeting.startTime,
+                'endTime': meeting.endTime,
+                'date': meeting.date
+            })
+            temp_InviteBox.save()
         return JsonResponse({'error': False, 'id': meeting.id})
 
 
