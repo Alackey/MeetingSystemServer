@@ -68,17 +68,23 @@ class MeetingView(View):
             isActive=body['isActive']
         )
         meeting.save()
-        # Add meeting info to schedule
-        # for employee in meeting.employees:
-        #     temp_schedule = models.Schedule(
-        #         type=
-        #         id=
-        #         title=
-        #         startTime=
-        #         endTime=
-        #         date=
-        #     )
-        #     temp_schedule.save()
+        # # Add meeting info to schedule
+        # schedule, created = models.Schedule.objects.get_or_create(
+        #     employeeID=meeting.owner
+        # )
+        # data = {'hello': 'world', 'timing': 'bnow'}
+        # print(data['hello'])
+        # print(schedule.blocks.append(data))
+        # print(schedule.blocks)
+        # # schedule.blocks.append({
+        # #     'type': 'meeting',
+        # #     'id': meeting.id,
+        # #     'title': meeting.title,
+        # #     'startTime': meeting.startTime,
+        # #     'endTime': meeting.endTime,
+        # #     'date': meeting.date
+        # # })
+        # schedule.save()
         return JsonResponse({'error': False, 'id': meeting.id})
 
 
