@@ -55,6 +55,8 @@ class MeetingView(View):
         body = json.loads(request.body.decode('utf-8'))
         meeting = models.Meeting(
             owner=body['owner'],
+            title=body['title'],
+            description=body['description'],
             room=body['room'],
             startTime=body['startTime'],
             endTime=body['endTime'],

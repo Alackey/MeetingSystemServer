@@ -10,6 +10,8 @@ class User(models.Model):
 
 class Meeting(models.Model):
     owner = models.CharField(max_length=20)
+    title = models.CharField(max_length=120)
+    description = models.TextField(blank=True)
     room = models.CharField(max_length=20)
     startTime = models.TimeField()
     endTime = models.TimeField()
