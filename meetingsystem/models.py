@@ -25,3 +25,8 @@ class Meeting(models.Model):
 class Schedule(models.Model):
     employeeID = models.CharField(max_length=20, primary_key=True, unique=True)
     blocks = ArrayField(JSONField())
+
+
+class InviteBox(models.Model):
+    employeeID = models.CharField(max_length=20, primary_key=True, unique=True)
+    invites = ArrayField(JSONField())
