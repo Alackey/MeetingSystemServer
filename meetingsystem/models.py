@@ -8,6 +8,18 @@ class User(models.Model):
     employeeID = models.CharField(max_length=20)
 
 
+class Meeting(models.Model):
+    owner = models.CharField(max_length=20)
+    room = models.CharField(max_length=20)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    date = models.DateField()
+    employees = ArrayField(models.CharField(max_length=20))
+    accepted = ArrayField(models.CharField(max_length=20))
+    declined = ArrayField(models.CharField(max_length=20))
+    isActive = models.BooleanField(default=True)
+
+
 class Schedule(models.Model):
     employeeID = models.CharField(max_length=20, primary_key=True, unique=True)
     blocks = ArrayField(JSONField())

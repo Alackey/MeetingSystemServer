@@ -35,6 +35,12 @@ class UserView(View):
         return JsonResponse(user[1:-1], safe=False)
 
 
+class MeetingView(View):
+    def post(self, request):
+        body = json.loads(request.body.decode('utf-8'))
+        return JsonResponse({'error': False})
+
+
 # Override Django serializer
 class Serializer(Builtin_Serializer):
     def get_dump_object(self, obj):
