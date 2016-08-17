@@ -41,6 +41,24 @@ class UserView(View):
         return JsonResponse({'error': False, 'user': user[1:-1]}, safe=False)
 
 
+class UserNewView(View):
+    def post(self, request):
+        body = json.loads(request.body.decode('utf-8'))
+        user, created = models.User.objects.get_or_create(
+            employeeID=body['employeeID']
+        )
+        if created:
+            user.name = body['name']
+            user.password = body['password']
+            user.save()
+            return JsonResponse({'error': False, 'id': user.id})
+        else:
+            return JsonResponse({
+                'error': True,
+                'errorMessage': 'EmployeeID already exists'
+            })
+
+
 class UserAllView(View):
     def get(self, request):
         serializer = Serializer()
