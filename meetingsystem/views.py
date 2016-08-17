@@ -1,4 +1,4 @@
-from django.core.serializers.json import Serializer as Builtin_Serializer
+from django.core.serializers.python import Serializer as Builtin_Serializer
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.views import View
@@ -38,7 +38,7 @@ class UserView(View):
             return JsonResponse({
                 'error': True, 'errorMessage': 'User Not Found'
             })
-        return JsonResponse({'error': False, 'user': user[1:-1]}, safe=False)
+        return JsonResponse({'error': False, 'user': user[0]}, safe=False)
 
 
 class UserNewView(View):
@@ -65,12 +65,13 @@ class UserAllView(View):
         users = serializer.serialize(
             models.User.objects.all()
         )
-        return JsonResponse({'error': False, 'data': users})
+        return JsonResponse({'error': False, 'data': users}, safe=False)
 
 
 class MeetingView(View):
     def post(self, request):
         body = json.loads(request.body.decode('utf-8'))
+
         # Create meeting
         meeting = models.Meeting(
             owner=body['owner'],
@@ -86,6 +87,7 @@ class MeetingView(View):
             isActive=body['isActive']
         )
         meeting.save()
+
         # Add meeting info to schedule
         schedule, created = models.Schedule.objects.get_or_create(
             employeeID=meeting.owner
@@ -99,6 +101,7 @@ class MeetingView(View):
             'date': meeting.date
         })
         schedule.save()
+
         # Add invites to employees InviteBox
         for employee in meeting.employees:
             temp_InviteBox, created = models.InviteBox.objects.get_or_create(
