@@ -1,9 +1,9 @@
 from django.conf.urls import url
-from meetingsystem.views import LoginView, UserView, UserAllView, MeetingView
+from . import views
 
 urlpatterns = [
-    url(r'^login$', LoginView.as_view()),
-    url(r'^user$', UserView.as_view()),
-    url(r'^user/all$', UserAllView.as_view()),
-    url(r'^meeting$', MeetingView.as_view()),
+    url(r'^login$', views.LoginView.as_view()),
+    url(r'^user$', views.UserView.as_view()),
+    url(r'^user/all$', views.UserAllView.as_view()),
+    url(r'^meeting$', views.MeetingView.as_view()),
 ]
