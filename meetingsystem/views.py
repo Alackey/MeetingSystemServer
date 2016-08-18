@@ -104,18 +104,16 @@ class MeetingView(View):
 
         # Add invites to employees InviteBox
         for employee in meeting.employees:
-            temp_InviteBox, created = models.InviteBox.objects.get_or_create(
-                employeeID=employee
+            invite = models.Invite.objects.create(
+                owner=employee,
+                meetingOwner=meeting.owner,
+                meetingId=meeting.id,
+                title=meeting.title,
+                startTime=meeting.startTime,
+                endTime=meeting.endTime,
+                date=meeting.date
             )
-            temp_InviteBox.invites.append({
-                'id': meeting.id,
-                'owner': meeting.owner,
-                'title': meeting.title,
-                'startTime': meeting.startTime,
-                'endTime': meeting.endTime,
-                'date': meeting.date
-            })
-            temp_InviteBox.save()
+            invite.save()
         return JsonResponse({'error': False, 'id': meeting.id})
 
 
