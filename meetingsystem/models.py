@@ -27,6 +27,11 @@ class Schedule(models.Model):
     blocks = JSONField(default=list([]))
 
 
-class InviteBox(models.Model):
-    employeeID = models.CharField(max_length=20, primary_key=True, unique=True)
-    invites = JSONField(default=list([]))
+class Invite(models.Model):
+    owner = models.CharField(max_length=20, db_index=True)
+    meetingOwner = models.CharField(max_length=20)
+    meetingId = models.IntegerField()
+    title = models.CharField(max_length=120)
+    startTime = models.TimeField()
+    endTime = models.TimeField()
+    date = models.DateField()
