@@ -7,6 +7,7 @@ import json
 
 
 class LoginView(View):
+    # Check login
     def post(self, request):
         body = json.loads(request.body.decode('utf-8'))
 
@@ -25,9 +26,9 @@ class LoginView(View):
             })
 
 
-class UserView(View):
-    def get(self, request):
-        employeeID = request.GET.get('employeeID')
+class UsersGetView(View):
+    # Get specific user
+    def get(self, request, employeeID):
         serializer = Serializer()
 
         try:
@@ -41,7 +42,16 @@ class UserView(View):
         return JsonResponse({'error': False, 'user': user[0]}, safe=False)
 
 
-class UserNewView(View):
+class UsersView(View):
+    # Get all users
+    def get(self, request):
+        serializer = Serializer()
+        users = serializer.serialize(
+            models.User.objects.all()
+        )
+        return JsonResponse({'error': False, 'data': users}, safe=False)
+
+    # Add new user
     def post(self, request):
         body = json.loads(request.body.decode('utf-8'))
         user, created = models.User.objects.get_or_create(
@@ -59,16 +69,8 @@ class UserNewView(View):
             })
 
 
-class UserAllView(View):
-    def get(self, request):
-        serializer = Serializer()
-        users = serializer.serialize(
-            models.User.objects.all()
-        )
-        return JsonResponse({'error': False, 'data': users}, safe=False)
-
-
 class MeetingView(View):
+    # Create new meeting
     def post(self, request):
         body = json.loads(request.body.decode('utf-8'))
 
