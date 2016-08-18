@@ -69,7 +69,7 @@ class UsersView(View):
             })
 
 
-class MeetingView(View):
+class MeetingsView(View):
     # Create new meeting
     def post(self, request):
         body = json.loads(request.body.decode('utf-8'))
