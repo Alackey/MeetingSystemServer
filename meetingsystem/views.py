@@ -117,6 +117,37 @@ class MeetingsView(View):
         return JsonResponse({'error': False, 'id': meeting.id})
 
 
+class TimeBlocksView(View):
+    # Get timeblocks for employees with specific date range
+    def get(self, request):
+        employees = eval(request.GET.get('employees'))
+        startDate = request.GET.get('startDate')
+        endDate = request.GET.get('endDate')
+        date = request.GET.get('date')
+        time_blocks = []
+
+        # Get timeblocks and add them to list
+        for employee in employees:
+            print(1)
+            # Specific date is givin
+            if date is not None:
+                time_blocks += models.TimeBlock.objects.filter(
+                    employeeID=employee,
+                    date=date
+                )
+
+            # Range of dates
+            else:
+                time_blocks += models.TimeBlock.objects.filter(
+                    employeeID=employee,
+                    date__range=(startDate, endDate)
+                )
+
+        serializer = Serializer()
+        time_blocks_ser = serializer.serialize(time_blocks)
+        return JsonResponse({'error': False, 'timeblocks': time_blocks_ser})
+
+
 class InvitesView(View):
     # Get invites for user
     def get(self, request, employeeID):
