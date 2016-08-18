@@ -119,6 +119,15 @@ class MeetingsView(View):
         return JsonResponse({'error': False, 'id': meeting.id})
 
 
+class InvitesView(View):
+    # Get invites for user
+    def get(self, request, employeeID):
+        serializer = Serializer()
+        invites = models.Invite.objects.filter(owner=employeeID)
+        invites_array = serializer.serialize(invites)
+        return JsonResponse({'error': False, 'data': invites_array})
+
+
 # Override Django serializer: Serializer only returns object fields
 class Serializer(Builtin_Serializer):
     def get_dump_object(self, obj):
