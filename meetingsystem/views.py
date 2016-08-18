@@ -90,19 +90,17 @@ class MeetingsView(View):
         )
         meeting.save()
 
-        # Add meeting info to schedule
-        schedule, created = models.Schedule.objects.get_or_create(
-            employeeID=meeting.owner
+        # Add timeblock for owner
+        time_block = models.TimeBlock(
+            employeeID=meeting.owner,
+            type='MEETING',
+            meetingID=meeting.id,
+            title=meeting.title,
+            startTime=meeting.startTime,
+            endTime=meeting.endTime,
+            date=meeting.date
         )
-        schedule.blocks.append({
-            'id': meeting.id,
-            'type': 'meeting',
-            'title': meeting.title,
-            'startTime': meeting.startTime,
-            'endTime': meeting.endTime,
-            'date': meeting.date
-        })
-        schedule.save()
+        time_block.save()
 
         # Add invites to employees InviteBox
         for employee in meeting.employees:

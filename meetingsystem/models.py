@@ -22,9 +22,14 @@ class Meeting(models.Model):
     isActive = models.BooleanField(default=True)
 
 
-class Schedule(models.Model):
-    employeeID = models.CharField(max_length=20, primary_key=True, unique=True)
-    blocks = JSONField(default=list([]))
+class TimeBlock(models.Model):
+    employeeID = models.CharField(max_length=20, db_index=True)
+    type = models.CharField(max_length=7, default='BUSY')
+    meetingID = models.CharField(max_length=20, default="")
+    title = models.CharField(max_length=120)
+    startTime = models.TimeField()
+    endTime = models.TimeField()
+    date = models.DateField()
 
 
 class Invite(models.Model):
