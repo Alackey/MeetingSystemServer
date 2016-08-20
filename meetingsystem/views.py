@@ -128,7 +128,6 @@ class TimeBlocksView(View):
 
         # Get timeblocks and add them to list
         for employee in employees:
-            print(1)
             # Specific date is givin
             if date is not None:
                 time_blocks += models.TimeBlock.objects.filter(
@@ -157,7 +156,11 @@ class InvitesView(View):
         return JsonResponse({'error': False, 'data': invites_array})
 
 
-# Override Django serializer: Serializer only returns object fields
+# Override Django serializer: Serializer returns object fields and obj id
 class Serializer(Builtin_Serializer):
     def get_dump_object(self, obj):
-        return self._current
+        result = self._current
+        # Add id to resulting dict if in obj
+        if obj.id is not None:
+            result['id'] = obj.id
+        return result
