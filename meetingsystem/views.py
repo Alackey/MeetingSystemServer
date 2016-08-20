@@ -146,6 +146,22 @@ class TimeBlocksView(View):
         time_blocks_ser = serializer.serialize(time_blocks)
         return JsonResponse({'error': False, 'timeblocks': time_blocks_ser})
 
+    # Add timeblock
+    def post(self, request):
+        body = json.loads(request.body.decode('utf-8'))
+
+        timeblock = models.TimeBlock.objects.create(
+            employeeID=body['employeeID'],
+            type=body['type'],
+            meetingID=body['meetingID'],
+            title=body['title'],
+            startTime=body['startTime'],
+            endTime=body['endTime'],
+            date=body['date']
+        )
+        timeblock.save()
+        return JsonResponse({'error': False, 'id': timeblock.id})
+
 
 class InvitesView(View):
     # Get invites for user
