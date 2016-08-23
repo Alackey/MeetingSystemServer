@@ -69,6 +69,18 @@ class UsersView(View):
             })
 
 
+class RoomsView(View):
+    # Create room
+    def post(self, request):
+        body = json.loads(request.body.decode('utf-8'))
+
+        room = models.Room.objects.create(
+            name=body['name'],
+            capacity=body['capacity']
+        )
+        return JsonResponse({'error': False})
+
+
 class MeetingsView(View):
     # Create new meeting
     def post(self, request):
@@ -115,6 +127,34 @@ class MeetingsView(View):
             )
             invite.save()
         return JsonResponse({'error': False, 'id': meeting.id})
+
+
+class MeetingsOverlapView(View):
+    # Get meetings that for overlapping
+    def get(self, request):
+        date = request.GET.get('date')
+        employees = request.GET.get('employees')
+        startTime = request.GET.get('startTime')
+        endTime = request.GET.get('endTime')
+        serializer = Serializer()
+
+        rooms = models.Room.objects.filter(capacity__gte=len(employees))
+        room_names = {}
+        for room in rooms:
+            room_names[room.name] = ""
+
+        if date and startTime and endTime:
+            for key, value in room_names.items():
+                meetings = models.Meeting.objects.filter(
+                    room=key,
+                    date=date,
+                    startTime__lte=endTime,
+                    endTime__gte=startTime
+                )
+                overlapping_meetings = serializer.serialize(meetings)
+                print(meetings)
+
+        return JsonResponse({'error': False, 'rooms': room_names})
 
 
 class TimeBlocksView(View):

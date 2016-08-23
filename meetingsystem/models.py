@@ -8,6 +8,11 @@ class User(models.Model):
     employeeID = models.CharField(max_length=20)
 
 
+class Room(models.Model):
+    name = models.CharField(max_length=50, primary_key=True)
+    capacity = models.IntegerField()
+
+
 class Meeting(models.Model):
     owner = models.CharField(max_length=20)
     title = models.CharField(max_length=120)
