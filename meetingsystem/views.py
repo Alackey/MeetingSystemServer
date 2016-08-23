@@ -137,37 +137,37 @@ class MeetingsOverlapView(View):
         startTime = request.GET.get('startTime')
         endTime = request.GET.get('endTime')
         duration = request.GET.get('duration')
-        room_names = {}
+        all_rooms = []
 
         # Get rooms with enough capacity
         rooms = models.Room.objects.filter(capacity__gte=len(employees))
         for room in rooms:
-            room_names[room.name] = ""
+            all_rooms.append({'name': room.name, 'meetings': ''})
 
         # Check meetings based on date, time, or duration
         serializer = Serializer()
-        for room, value in room_names.items():
+        for room in all_rooms:
 
             # Check if the time is availble in rooms
             if date and startTime and endTime:
                 meetings = models.Meeting.objects.filter(
-                    room=room,
+                    room=room['name'],
                     date=date,
                     startTime__lte=endTime,
                     endTime__gte=startTime
                 )
-                room_names[room] = True if meetings else False
+                room['meetings'] = True if meetings else False
 
             # Get all meetings for the date and room number
             elif date and duration:
                 meetings = models.Meeting.objects.filter(
-                    room=room,
+                    room=room['name'],
                     date=date
                 )
                 meetings_ser = serializer.serialize(meetings)
-                room_names[room] = meetings_ser
+                room['meetings'] = meetings_ser
 
-        return JsonResponse({'error': False, 'rooms': room_names})
+        return JsonResponse({'error': False, 'rooms': all_rooms})
 
 
 class TimeBlocksView(View):
