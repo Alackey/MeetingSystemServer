@@ -136,6 +136,7 @@ class MeetingsOverlapView(View):
         employees = eval(request.GET.get('employees'))
         startTime = request.GET.get('startTime')
         endTime = request.GET.get('endTime')
+        duration = request.GET.get('duration')
         room_names = {}
 
         # Get rooms with enough capacity
@@ -153,6 +154,17 @@ class MeetingsOverlapView(View):
                     endTime__gte=startTime
                 )
                 room_names[key] = True if meetings else False
+
+        # Get all meetings for the date and room number
+        elif date and duration:
+            serializer = Serializer()
+            for key, value in room_names.items():
+                meetings = models.Meeting.objects.filter(
+                    room=key,
+                    date=date
+                )
+                meetings_ser = serializer.serialize(meetings)
+                room_names[key] = meetings_ser
 
         return JsonResponse({'error': False, 'rooms': room_names})
 
