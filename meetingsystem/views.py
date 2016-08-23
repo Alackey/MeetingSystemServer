@@ -130,19 +130,20 @@ class MeetingsView(View):
 
 
 class MeetingsOverlapView(View):
-    # Get meetings that for overlapping
+    # Check rooms and meetings that for overlapping
     def get(self, request):
         date = request.GET.get('date')
-        employees = request.GET.get('employees')
+        employees = eval(request.GET.get('employees'))
         startTime = request.GET.get('startTime')
         endTime = request.GET.get('endTime')
-        serializer = Serializer()
-
-        rooms = models.Room.objects.filter(capacity__gte=len(employees))
         room_names = {}
+
+        # Get rooms with enough capacity
+        rooms = models.Room.objects.filter(capacity__gte=len(employees))
         for room in rooms:
             room_names[room.name] = ""
 
+        # Check if the time is availble in rooms
         if date and startTime and endTime:
             for key, value in room_names.items():
                 meetings = models.Meeting.objects.filter(
@@ -151,8 +152,7 @@ class MeetingsOverlapView(View):
                     startTime__lte=endTime,
                     endTime__gte=startTime
                 )
-                overlapping_meetings = serializer.serialize(meetings)
-                print(meetings)
+                room_names[key] = True if meetings else False
 
         return JsonResponse({'error': False, 'rooms': room_names})
 
