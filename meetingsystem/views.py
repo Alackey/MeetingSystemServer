@@ -144,27 +144,28 @@ class MeetingsOverlapView(View):
         for room in rooms:
             room_names[room.name] = ""
 
-        # Check if the time is availble in rooms
-        if date and startTime and endTime:
-            for key, value in room_names.items():
+        # Check meetings based on date, time, or duration
+        serializer = Serializer()
+        for room, value in room_names.items():
+
+            # Check if the time is availble in rooms
+            if date and startTime and endTime:
                 meetings = models.Meeting.objects.filter(
-                    room=key,
+                    room=room,
                     date=date,
                     startTime__lte=endTime,
                     endTime__gte=startTime
                 )
-                room_names[key] = True if meetings else False
+                room_names[room] = True if meetings else False
 
-        # Get all meetings for the date and room number
-        elif date and duration:
-            serializer = Serializer()
-            for key, value in room_names.items():
+            # Get all meetings for the date and room number
+            elif date and duration:
                 meetings = models.Meeting.objects.filter(
-                    room=key,
+                    room=room,
                     date=date
                 )
                 meetings_ser = serializer.serialize(meetings)
-                room_names[key] = meetings_ser
+                room_names[room] = meetings_ser
 
         return JsonResponse({'error': False, 'rooms': room_names})
 
