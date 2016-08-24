@@ -168,6 +168,11 @@ class MeetingsOverlapView(View):
                     date=date
                 )
                 meetings_ser = serializer.serialize(meetings)
+                # Convert string to array for meetings
+                for meeting in meetings_ser:
+                    meeting['employees'] = eval(meeting['employees'])
+                    meeting['accepted'] = eval(meeting['accepted'])
+                    meeting['declined'] = eval(meeting['declined'])
                 # Add meetings + room to result
                 room_info = {}
                 room_info['name'] = room.name
