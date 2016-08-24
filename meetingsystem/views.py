@@ -137,37 +137,44 @@ class MeetingsOverlapView(View):
         startTime = request.GET.get('startTime')
         endTime = request.GET.get('endTime')
         duration = request.GET.get('duration')
+        result = []
         all_rooms = []
 
         # Get rooms with enough capacity
         rooms = models.Room.objects.filter(capacity__gte=len(employees))
         for room in rooms:
-            all_rooms.append({'name': room.name, 'meetings': ''})
+            all_rooms.append({'name': room.name})
 
         # Check meetings based on date, time, or duration
         serializer = Serializer()
-        for room in all_rooms:
+        for room in rooms:
 
             # Check if the time is availble in rooms
             if date and startTime and endTime:
                 meetings = models.Meeting.objects.filter(
-                    room=room['name'],
+                    room=room.name,
                     date=date,
                     startTime__lte=endTime,
                     endTime__gte=startTime
                 )
-                room['meetings'] = True if meetings else False
+                # Add meeting name to result dict if it is available
+                if not meetings:
+                    result.append({'name': room.name})
 
             # Get all meetings for the date and room number
             elif date and duration:
                 meetings = models.Meeting.objects.filter(
-                    room=room['name'],
+                    room=room.name,
                     date=date
                 )
                 meetings_ser = serializer.serialize(meetings)
-                room['meetings'] = meetings_ser
+                # Add meetings + room to result
+                room_info = {}
+                room_info['name'] = room.name
+                room_info['meetings'] = meetings_ser
+                result.append(room_info)
 
-        return JsonResponse({'error': False, 'rooms': all_rooms})
+        return JsonResponse({'error': False, 'rooms': result})
 
 
 class TimeBlocksView(View):
