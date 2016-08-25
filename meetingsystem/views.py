@@ -128,6 +128,25 @@ class MeetingsView(View):
             invite.save()
         return JsonResponse({'error': False, 'id': meeting.id})
 
+    # Update meeting
+    def put(self, request):
+        body = json.loads(request.body.decode('utf-8'))
+
+        models.Meeting.objects.filter(id=body['id']).update(
+            owner=body['owner'],
+            title=body['title'],
+            description=body['description'],
+            room=body['room'],
+            startTime=body['startTime'],
+            endTime=body['endTime'],
+            date=body['date'],
+            employees=body['employees'],
+            accepted=body['accepted'],
+            declined=body['declined'],
+            isActive=body['isActive']
+        )
+        return JsonResponse({'error': False})
+
 
 class MeetingsOverlapView(View):
     # Check rooms and meetings that for overlapping
