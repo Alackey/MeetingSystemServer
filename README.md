@@ -27,6 +27,5 @@ Required (body):
 - startTime : String
 - endTime : String
 - date : String
-- id : int
 
 <sub>1\. MEETING or BUSY</sub>
