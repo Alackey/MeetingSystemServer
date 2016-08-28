@@ -60,6 +60,8 @@ class UsersView(View):
         if created:
             user.name = body['name']
             user.password = body['password']
+            user.isAdmin = body['isAdmin']
+            user.isEmployee = body['isEmployee']
             user.save()
             return JsonResponse({'error': False, 'id': user.id})
         else:

@@ -6,6 +6,8 @@ class User(models.Model):
     name = models.CharField(max_length=40)
     password = models.CharField(max_length=20)
     employeeID = models.CharField(max_length=20)
+    isAdmin = models.BooleanField(default=False)
+    isEmployee = models.BooleanField(default=False)
 
 
 class Room(models.Model):
