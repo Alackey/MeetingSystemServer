@@ -19,7 +19,13 @@ class LoginView(View):
             })
 
         if user.password == body['password']:
-            return JsonResponse({'error': False, 'id': user.id})
+            # Serialize user
+            serializer = Serializer()
+            user_ser = serializer.serialize(
+                [user]
+            )
+
+            return JsonResponse({'error': False, 'user': user_ser[0]})
         else:
             return JsonResponse({
                 'error': True, 'errorMessage': 'Incorrect Password'
