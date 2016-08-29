@@ -78,9 +78,21 @@ class UsersView(View):
 
     # Delete a user
     def delete(self, request):
-        name = request.GET.get('name')
+        employeeID = request.GET.get('employeeID')
 
-        models.Room.objects.filter(name=name).delete()
+        # Get user
+        user = models.User.objects.filter(employeeID=employeeID)
+
+        # Check if a user was found
+        if len(user) == 0:
+            return JsonResponse({
+                'error': True, 'errorMessage': 'User Not Found'
+            })
+
+        # Delete user
+        user.delete()
+
+        return JsonResponse({'error': False})
 
 
 class UsersResetPasswordView(View): pass
