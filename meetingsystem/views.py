@@ -290,7 +290,6 @@ class TimeBlocksView(View):
                     date__range=(startDate, endDate)
                 )
 
-            ## Recurring timeblocks
             # All recurring timeblocks
             if recurringAll:
                 time_blocks += models.TimeBlock.objects.filter(
