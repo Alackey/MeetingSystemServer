@@ -5,6 +5,7 @@ urlpatterns = [
     url(r'^login$', views.LoginView.as_view()),
     url(r'^users/(?P<employeeID>.+)$', views.UsersGetView.as_view()),
     url(r'^users$', views.UsersView.as_view()),
+    url(r'^users/resetpassword$', views.UsersResetPasswordView.as_view()),
     url(r'^rooms$', views.RoomsView.as_view()),
     url(r'^meetings$', views.MeetingsView.as_view()),
     url(r'^meetings/overlap$', views.MeetingsOverlapView.as_view()),

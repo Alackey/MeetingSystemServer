@@ -76,6 +76,15 @@ class UsersView(View):
                 'errorMessage': 'EmployeeID already exists'
             })
 
+    # Delete a user
+    def delete(self, request):
+        name = request.GET.get('name')
+
+        models.Room.objects.filter(name=name).delete()
+
+
+class UsersResetPasswordView(View): pass
+
 
 class RoomsView(View):
     # Create room
@@ -86,6 +95,19 @@ class RoomsView(View):
             name=body['name'],
             capacity=body['capacity']
         )
+        return JsonResponse({'error': False})
+
+    # Delete a room
+    def delete(self, request):
+        name = request.GET.get('name')
+
+        try:
+            models.Room.objects.filter(name=name).delete()
+        except ObjectDoesNotExist:
+            return JsonResponse({
+                'error': True, 'errorMessage': 'Room Not Found'
+            })
+
         return JsonResponse({'error': False})
 
 
