@@ -97,6 +97,26 @@ class RoomsView(View):
         )
         return JsonResponse({'error': False})
 
+    # Update a room
+    def put(self, request):
+        body = json.loads(request.body.decode('utf-8'))
+
+        # Get room to update
+        room = models.Room.objects.filter(name=body['name'])
+
+        # Check if the room was not found
+        if len(room) == 0:
+            return JsonResponse({
+                'error': True, 'errorMessage': 'Room Not Found'
+            })
+
+        # Update the room info
+        room.update(
+            capacity=body['capacity']
+        )
+
+        return JsonResponse({'error': False})
+
     # Delete a room
     def delete(self, request):
         name = request.GET.get('name')
