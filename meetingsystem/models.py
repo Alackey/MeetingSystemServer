@@ -36,7 +36,8 @@ class TimeBlock(models.Model):
     title = models.CharField(max_length=120)
     startTime = models.TimeField()
     endTime = models.TimeField()
-    date = models.DateField()
+    date = models.DateField(null=True)
+    day = models.IntegerField(null=True)
 
 
 class Invite(models.Model):

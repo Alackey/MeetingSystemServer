@@ -270,6 +270,8 @@ class TimeBlocksView(View):
         startDate = request.GET.get('startDate')
         endDate = request.GET.get('endDate')
         date = request.GET.get('date')
+        recurringDay = request.GET.get('recurringDay')
+        recurringAll = request.GET.get('recurringAll')
         time_blocks = []
 
         # Get timeblocks and add them to list
@@ -282,10 +284,26 @@ class TimeBlocksView(View):
                 )
 
             # Range of dates
-            else:
+            elif startDate is not None and endDate is not None:
                 time_blocks += models.TimeBlock.objects.filter(
                     employeeID=employee,
                     date__range=(startDate, endDate)
+                )
+
+            ## Recurring timeblocks
+            # All recurring timeblocks
+            if recurringAll:
+                time_blocks += models.TimeBlock.objects.filter(
+                    employeeID=employee
+                ).exclude(
+                    day__isnull=True
+                )
+
+            # Recurring timeblocks for specific day
+            elif recurringDay is not None:
+                time_blocks += models.TimeBlock.objects.filter(
+                    employeeID=employee,
+                    day=recurringDay
                 )
 
         serializer = Serializer()
@@ -303,7 +321,8 @@ class TimeBlocksView(View):
             title=body['title'],
             startTime=body['startTime'],
             endTime=body['endTime'],
-            date=body['date']
+            date=body['date'],
+            day=body['day']
         )
         timeblock.save()
         return JsonResponse({'error': False, 'id': timeblock.id})
