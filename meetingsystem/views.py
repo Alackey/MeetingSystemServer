@@ -335,6 +335,28 @@ class InvitesView(View):
         invites_array = serializer.serialize(invites)
         return JsonResponse({'error': False, 'data': invites_array})
 
+    # Accept/Decline invite
+    def put(self, request, employeeID):
+        body = json.loads(request.body.decode('utf-8'))
+        invite = models.Invite.objects.filter(id=body['id'])
+        meeting = models.Meeting.objects.get(
+            id=invite.values_list('meetingId', flat=True)[0]
+        )
+
+        # Add owner to meeting declined list
+        if body['action'] == 'decline':
+            meeting.declined.append(employeeID)
+        # Add owner to meeting accepted list
+        elif body['action'] == 'accept':
+            meeting.accepted.append(employeeID)
+
+        meeting.save()
+
+        # Delete invite
+        invite.delete()
+
+        return JsonResponse({'error': False})
+
 
 # Override Django serializer: Serializer returns object fields and obj id
 class Serializer(Builtin_Serializer):
